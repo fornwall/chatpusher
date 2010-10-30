@@ -38,7 +38,7 @@ public class BroadcastServlet extends HttpServlet {
 			IOException {
 		String listName = req.getParameter("list");
 		String secretToken = req.getParameter("secret_token");
-		String message = req.getParameter("message");
+		String message = req.getParameter("payload");
 		if (listName == null) {
 			resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "The parameter 'list' is required!");
 			return;
@@ -46,7 +46,7 @@ public class BroadcastServlet extends HttpServlet {
 			resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "The parameter 'secret_token' is required!");
 			return;
 		} else if (message == null) {
-			resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "The parameter 'message' is required!");
+			resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "The parameter 'payload' is required!");
 			return;
 		}
 

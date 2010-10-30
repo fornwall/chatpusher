@@ -15,8 +15,8 @@ Other commands are:
 To broadcast a message to a chat list issue a GET or POST to the URL https://chatpusher.appspot.com/broadcast with the following parameters:
 	list: The name of the list to broadcast to.
 	secret_token: The secret token (see the /token and /newtoken commands above).
-	message: The message text to broadcast.
+	payload: The message text to broadcast.
 
 Examples with curl:
-	curl -d list=mylist -d secret_token=68de5ebf-f5d1-49df-9fef-f8d1a089838f -d message=HelloWorld http://chatpusher.appspot.com/broadcast
-	./my_script_generating_output | curl -d list=test -d secret_token=68de5ebf-f5d1-49df-9fef-f8d1a089838f --data-urlencode message@- http://chatpusher.appspot.com/broadcast
+	curl -d list=mylist -d secret_token=68de5ebf-f5d1-49df-9fef-f8d1a089838f -d payload=HelloWorld http://chatpusher.appspot.com/broadcast
+	./my_script_generating_output | curl -d list=test -d secret_token=68de5ebf-f5d1-49df-9fef-f8d1a089838f --data-urlencode payload@- http://chatpusher.appspot.com/broadcast
