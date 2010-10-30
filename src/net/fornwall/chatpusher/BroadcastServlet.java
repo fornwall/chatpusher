@@ -66,8 +66,6 @@ public class BroadcastServlet extends HttpServlet {
 			recipientJIDs[i++] = new JID(member);
 		MessageBuilder builder = new MessageBuilder();
 
-		logger.warning("About to broadcast from " + listJID + ", recipients=" + Arrays.toString(recipientJIDs)
-				+ ", message=" + message);
 		XMPPReceiverServlet.service.sendMessage(builder.withBody(message).withRecipientJids(recipientJIDs)
 				.withFromJid(listJID).build());
 		resp.setContentType("text/plain");

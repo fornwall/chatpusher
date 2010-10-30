@@ -2,7 +2,6 @@ package net.fornwall.chatpusher;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -45,7 +44,6 @@ import com.google.appengine.api.xmpp.XMPPServiceFactory;
 		Message message = service.parseMessage(request);
 		MessageBuilder builder = new MessageBuilder();
 
-		logger.warning("Recipients: " + Arrays.toString(message.getRecipientJids()));
 		if (message.getRecipientJids().length != 1)
 			return;
 
@@ -112,7 +110,6 @@ import com.google.appengine.api.xmpp.XMPPServiceFactory;
 						.withRecipientJids(message.getFromJid()).withFromJid(recipientJID).build());
 				return;
 			} else if (messageText.startsWith("/add ")) {
-				logger.warning("MESSAGE TEXT FOR ADD: " + messageText);
 				String[] parts = messageText.split(" ");
 				if (parts.length >= 2) {
 					String email = parts[1];
