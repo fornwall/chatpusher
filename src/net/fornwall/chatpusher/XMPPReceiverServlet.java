@@ -114,12 +114,16 @@ import com.google.appengine.api.xmpp.XMPPServiceFactory;
 				if (parts.length >= 2) {
 					String email = parts[1];
 					if (!isValidEmailAddress(email)) {
-						service.sendMessage(builder.withBody("Invalid email.").withRecipientJids(message.getFromJid())
-								.withFromJid(recipientJID).build());
+						service.sendMessage(builder.withBody("Invalid email: " + email)
+								.withRecipientJids(message.getFromJid()).withFromJid(recipientJID).build());
 						return;
 					} else if (chatList.getMembers().contains(email)) {
 						service.sendInvitation(new JID(email), recipientJID);
 						service.sendMessage(builder.withBody(email + " is already a member. Invitation re-sent.")
+								.withRecipientJids(message.getFromJid()).withFromJid(recipientJID).build());
+						return;
+					} else if (chatList.getMembers().size() >= 50) {
+						service.sendMessage(builder.withBody("Too many members - cannot add " + email + ".")
 								.withRecipientJids(message.getFromJid()).withFromJid(recipientJID).build());
 						return;
 					} else {
