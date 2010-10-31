@@ -33,7 +33,7 @@ This is obviously only useful if you have more then one member.</p>
 	<dt>list</dt><dd>The name of the list to broadcast to.</dd>
 	<dt>secret_token</dt><dd>The secret token (see the /token and /newtoken commands above).</dd>
 	<dt>payload</dt><dd>The message text to broadcast.</dd>
-</dt>
+</dl>
 <p>Examples using curl:</p>
 <pre>curl -d list=mylist -d secret_token=68de5ebf-f5d1-49df-9fef-f8d1a089838f -d payload=HelloWorld http://chatpusher.appspot.com/broadcast
 ./my_script_generating_output | curl -d list=test -d secret_token=68de5ebf-f5d1-49df-9fef-f8d1a089838f --data-urlencode payload@- http://chatpusher.appspot.com/broadcast</pre>
