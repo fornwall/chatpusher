@@ -1,4 +1,4 @@
-net.fornwall.chatpusher - an App Engine project to broadcast messages to a list of email addresses over XMPP.
+Chat Pusher - an App Engine project to broadcast messages to a list of email addresses over XMPP.
 
 Chat lists have addresses of the form ${NAME}@chatpusher.appspotchat.com. To claim a list and start using it, add
 the desired list to as an XMPP buddy and issue the command /claim.
