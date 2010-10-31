@@ -2,8 +2,6 @@ package net.fornwall.chatpusher;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -26,7 +24,6 @@ import com.google.appengine.api.xmpp.MessageBuilder;
  */
 public class BroadcastServlet extends HttpServlet {
 
-	private static final Logger logger = Logger.getLogger(BroadcastServlet.class.getName());
 	private static final long serialVersionUID = 1L;
 
 	@Override protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
