@@ -59,8 +59,8 @@ public class MailReceiverServlet extends HttpServlet {
 						} else if (!list.getSecretToken().equals(token)) {
 							logger.warning("Incorrect token '" + token + "' for recipient: " + recipientString);
 						} else {
-							String textToSend = receivedMail.getSubject() + "\n\n" + messageText + "\n\n "
-									+ receivedMail.getFrom()[0].toString();
+							String textToSend = receivedMail.getSubject().trim() + "\n\n" + messageText.trim() + "\n\n "
+									+ receivedMail.getFrom()[0].toString().trim();
 							JID listJID = new JID(XMPPReceiverServlet.listAddressFromName(list.getName()));
 							JID[] recipientJIDs = new JID[list.getMembers().size()];
 							int i = 0;
