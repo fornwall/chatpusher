@@ -31,13 +31,13 @@ This is obviously only useful if you have more then one member.</p>
 <h2>Broadcasting using HTTP</h2>
 <p>To broadcast a message to a chat list issue a GET or POST to the URL <strong>https://chatpusher.appspot.com/broadcast</strong> with the following parameters:</p>
 <dl>
-	<dt>list</dt><dd>The name of the list to broadcast to.</dd>
+	<dt>name</dt><dd>The name of the list to broadcast to.</dd>
 	<dt>secret_token</dt><dd>The secret token (see the /token and /newtoken commands above).</dd>
 	<dt>payload</dt><dd>The message text to broadcast.</dd>
 </dl>
 <p>Examples using curl:</p>
-<pre>curl -d list=mylist -d secret_token=68de5ebf-f5d1-49df-9fef-f8d1a089838f -d payload=HelloWorld http://chatpusher.appspot.com/broadcast
-./my_script_generating_output | curl -d list=test -d secret_token=68de5ebf-f5d1-49df-9fef-f8d1a089838f --data-urlencode payload@- http://chatpusher.appspot.com/broadcast</pre>
+<pre>curl -d name=mylist -d secret_token=68de5ebf-f5d1-49df-9fef-f8d1a089838f -d payload=HelloWorld http://chatpusher.appspot.com/broadcast
+./my_script_generating_output | curl -d name=test -d secret_token=68de5ebf-f5d1-49df-9fef-f8d1a089838f --data-urlencode payload@- http://chatpusher.appspot.com/broadcast</pre>
 
 <h2>Broadcasting using mail</h2>
 <p>To broadcast a message using mail send a message to the address <em>${name}+${secret_token}@chatpusher.appspotmail.com</em>.</p>

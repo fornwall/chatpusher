@@ -33,11 +33,11 @@ public class BroadcastServlet extends HttpServlet {
 
 	@Override protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
 			IOException {
-		String listName = req.getParameter("list");
+		String listName = req.getParameter("name");
 		String secretToken = req.getParameter("secret_token");
 		String message = req.getParameter("payload");
 		if (listName == null) {
-			resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "The parameter 'list' is required!");
+			resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "The parameter 'name' is required!");
 			return;
 		} else if (secretToken == null) {
 			resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "The parameter 'secret_token' is required!");
