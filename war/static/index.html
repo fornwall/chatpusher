@@ -6,32 +6,32 @@
 </head>
 <body>
 <h1>Chat Pusher</h1>
-<p><em>Chat Pusher</em> is a service allowing you to have messages posted using <strong>HTTP</strong>, <strong>email</strong> or <strong>XMPP</strong>
-broadcasted to one or more XMPP receivers.</p>
+<p><em>Chat Pusher</em> is a service allowing messages posted using <strong>HTTP</strong>, <strong>email</strong> or <strong>XMPP</strong>
+to be broadcasted to one or more XMPP recipients.</p>
 
 <h2>Setting up a broadcast address</h2>
-<p><em>Chat Pusher</em> manages addresses of the kind <em>${name}@chatpusher.appspotchat.com</em>. To claim an XMPP address (first-come, first-served)
+<p><em>Chat Pusher</em> manages addresses of the kind <strong>${name}@chatpusher.appspotchat.com</strong>. To claim an XMPP address (first-come, first-served)
 and start using it, add the desired address as an XMPP buddy and send "/claim" to it. Unless the name was already taken (in which case you will be informed about it),
 you are now the owner and the single member of the address.</p>
 <p>As an owner, you may issue the following administrative commands:</p>
 <dl>
+	<dt>/add &lt;newmember-email-address&gt;</dt><dd>Add a new member to those receiving broadcasts. An invitation will be sent but messages will not be
+					  		 received by the new member until he adds the chat list as a buddy. If the specified email
+					  		  is already a member of the chat list an invitation will be sent again.</dd>
+	<dt>/remove &lt;membertoremove-email-address&gt;</dt><dd>Remove a member from the chat list.</dd>
 	<dt>/token</dt><dd>Write out the current secret token (used with broadcasting over HTTP and email, see below).</dd>
 	<dt>/newtoken</dt><dd>Generate a new token and replace the current one.</dd>
-	<dt>/add &lt;newmember-email-address&gt;</dt><dd>Add a new member to those receiving broadcasts. An invitation will be sent but messages will not be
-					  received by the new member until he adds the chat list as a buddy. If the specified email
-					  is already a member of the chat list an invitation will be sent again.</dd>
-	<dt>/remove &lt;membertoremove-email-address&gt;</dt><dd>Remove a member from the chat list.</dd>
 	<dt>/info</dt><dd>Get information on the owner and members of the list. This command may also be issued by regular members (not just the owner).</dd>
 </dl>
 
 <h2>Broadcasting using XMPP</h2>
-<p>Every message sent to <em>${name}@chatpusher.appspotchat.com</em> by one of its members will be automatically broadcasted (with a signature) to all members.
+<p>Messages sent to <strong>${name}@chatpusher.appspotchat.com</strong> by one of its members will be automatically broadcasted (with a signature) to all members.
 This is obviously only useful if you have more then one member.</p> 
 
 <h2>Broadcasting using HTTP</h2>
-<p>To broadcast a message to a chat list issue a GET or POST to the URL <strong>https://chatpusher.appspot.com/broadcast</strong> with the following parameters:</p>
+<p>To broadcast a message to a chat list using HTTP issue a GET or POST request to the URL <strong>https://chatpusher.appspot.com/broadcast</strong> with the following parameters:</p>
 <dl>
-	<dt>name</dt><dd>The name of the list to broadcast to.</dd>
+	<dt>name</dt><dd>The name of the list to broadcast to (as in ${name}@chatpusher.appspotchat.com).</dd>
 	<dt>secret_token</dt><dd>The secret token (see the /token and /newtoken commands above).</dd>
 	<dt>payload</dt><dd>The message text to broadcast.</dd>
 </dl>
@@ -40,7 +40,8 @@ This is obviously only useful if you have more then one member.</p>
 ./my_script_generating_output | curl -d name=test -d secret_token=68de5ebf-f5d1-49df-9fef-f8d1a089838f --data-urlencode payload@- http://chatpusher.appspot.com/broadcast</pre>
 
 <h2>Broadcasting using mail</h2>
-<p>To broadcast a message using mail send a message to the address <em>${name}+${secret_token}@chatpusher.appspotmail.com</em>.</p>
+<p>To broadcast a message using mail send an email to the address <strong>${name}+${secret_token}@chatpusher.appspotmail.com</strong> with the <em>name</em> and <em>secret_token</em>
+parameters having the same meaning as in the HTTP case above.</p>
 
 <h2>About</h2>
 <p>Source code is available at <a href="http://github.com/fornwall/chatpusher">http://github.com/fornwall/chatpusher</a>
