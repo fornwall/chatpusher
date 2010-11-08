@@ -2,16 +2,15 @@ package net.fornwall.chatpusher;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.mail.Address;
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
-import javax.mail.Message.RecipientType;
 import javax.mail.Transport;
 import javax.mail.internet.ContentType;
 import javax.mail.internet.InternetAddress;
@@ -43,37 +42,35 @@ public class MailReceiverServlet extends HttpServlet {
 			if (messageText == null) {
 				return;
 			}
-			for (Address recipient : receivedMail.getRecipients(RecipientType.TO)) {
-				String recipientString = ((InternetAddress) recipient).getAddress();
-				if (recipientString.endsWith("@chatpusher.appspotmail.com")) {
-					String nameAndToken = recipientString.substring(0, recipientString.indexOf('@'));
-					int plusIndex = nameAndToken.indexOf('+');
-					if (plusIndex == -1 || plusIndex == nameAndToken.length() - 1) {
-						continue;
-					} else {
-						String name = nameAndToken.substring(0, plusIndex);
-						String token = nameAndToken.substring(plusIndex + 1);
-						ChatList list = Database.objectById(ChatList.class, ChatList.keyForName(name));
-						if (list == null) {
-							logger.warning("No list for recipient: " + recipientString);
-						} else if (!list.getSecretToken().equals(token)) {
-							logger.warning("Incorrect token '" + token + "' for recipient: " + recipientString);
-						} else {
-							String textToSend = receivedMail.getSubject().trim() + "\n\n" + messageText.trim() + "\n\n "
-									+ receivedMail.getFrom()[0].toString().trim();
-							JID listJID = new JID(XMPPReceiverServlet.listAddressFromName(list.getName()));
-							JID[] recipientJIDs = new JID[list.getMembers().size()];
-							int i = 0;
-							for (String member : list.getMembers())
-								recipientJIDs[i++] = new JID(member);
-							MessageBuilder builder = new MessageBuilder();
-							XMPPReceiverServlet.service.sendMessage(builder.withBody(textToSend)
-									.withRecipientJids(recipientJIDs).withFromJid(listJID).build());
-						}
-					}
-				} else {
+			String recipientString = URLDecoder.decode(req.getRequestURI().substring("/_ah/mail/".length()), "utf-8");
+			if (recipientString.endsWith("@chatpusher.appspotmail.com")) {
+				String nameAndToken = recipientString.substring(0, recipientString.indexOf('@'));
+				int plusIndex = nameAndToken.indexOf('+');
+				if (plusIndex == -1 || plusIndex == nameAndToken.length() - 1) {
 					logger.warning("Ignoring recipient: " + recipientString);
+				} else {
+					String name = nameAndToken.substring(0, plusIndex);
+					String token = nameAndToken.substring(plusIndex + 1);
+					ChatList list = Database.objectById(ChatList.class, ChatList.keyForName(name));
+					if (list == null) {
+						logger.warning("No list for recipient: " + recipientString);
+					} else if (!list.getSecretToken().equals(token)) {
+						logger.warning("Incorrect token '" + token + "' for recipient: " + recipientString);
+					} else {
+						String textToSend = receivedMail.getSubject().trim() + "\n\n" + messageText.trim() + "\n\n "
+								+ receivedMail.getFrom()[0].toString().trim();
+						JID listJID = new JID(XMPPReceiverServlet.listAddressFromName(list.getName()));
+						JID[] recipientJIDs = new JID[list.getMembers().size()];
+						int i = 0;
+						for (String member : list.getMembers())
+							recipientJIDs[i++] = new JID(member);
+						MessageBuilder builder = new MessageBuilder();
+						XMPPReceiverServlet.service.sendMessage(builder.withBody(textToSend)
+								.withRecipientJids(recipientJIDs).withFromJid(listJID).build());
+					}
 				}
+			} else {
+				logger.warning("Ignoring recipient: " + recipientString);
 			}
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "MailReceiverServlet#doPost", e);
