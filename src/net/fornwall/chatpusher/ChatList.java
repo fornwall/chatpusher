@@ -1,5 +1,6 @@
 package net.fornwall.chatpusher;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -9,8 +10,15 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import com.google.appengine.api.channel.ChannelMessage;
+import com.google.appengine.api.channel.ChannelService;
+import com.google.appengine.api.channel.ChannelServiceFactory;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.xmpp.JID;
+import com.google.appengine.api.xmpp.MessageBuilder;
+import com.google.appengine.api.xmpp.XMPPService;
+import com.google.appengine.api.xmpp.XMPPServiceFactory;
 
 @PersistenceCapable public class ChatList {
 
@@ -62,5 +70,51 @@ import com.google.appengine.api.datastore.KeyFactory;
 
 	Set<String> getMembers() {
 		return members;
+	}
+
+	public void sendToMembers(String messageText, JID from) {
+		String senderEmail = emailAddressFromJID(from);
+		JID listJID = new JID(XMPPReceiverServlet.listAddressFromName(getName()));
+
+		XMPPService service = XMPPServiceFactory.getXMPPService();
+		ChannelService channelService = ChannelServiceFactory.getChannelService();
+
+		ArrayList<JID> recipientJIDS = new ArrayList<JID>(getMembers().size());
+		for (String member : getMembers()) {
+			if (!member.equals(senderEmail))
+				recipientJIDS.add(new JID(member));
+		}
+
+		MessageBuilder builder = new MessageBuilder();
+
+		if (recipientJIDS.isEmpty()) {
+			service.sendMessage(builder.withBody("You are the only member of this list.").withRecipientJids(from)
+					.withFromJid(listJID).build());
+		} else {
+			String textToSend;
+			if (messageText.contains("\n")) {
+				textToSend = messageText + "\n\n" + senderEmail;
+			} else {
+				textToSend = messageText + " - " + senderEmail;
+			}
+			service.sendMessage(builder.withBody(textToSend)
+					.withRecipientJids(recipientJIDS.toArray(new JID[recipientJIDS.size()])).withFromJid(from).build());
+
+			for (String member : getMembers()) {
+				String channelClientId = member + "_secret_stuff";
+				channelService.sendMessage(new ChannelMessage(channelClientId, textToSend));
+			}
+		}
+
+	}
+
+	private static String emailAddressFromJID(JID jid) {
+		String id = jid.getId();
+		int slashIndex = id.indexOf('/');
+		if (slashIndex == -1) {
+			return id;
+		} else {
+			return id.substring(0, slashIndex);
+		}
 	}
 }
